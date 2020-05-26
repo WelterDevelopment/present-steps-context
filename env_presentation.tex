@@ -1,0 +1,153 @@
+\startenvironment[env_presentation]
+
+\usepath[components,pictures,products]
+
+% Document Layout
+\setupcolors[state=start]
+\definepapersize[W1][width=176mm, height=99mm]
+\setuppapersize[W1][W1]
+
+\mainlanguage[en] % Header names
+\language[en] % Hyphenation
+\enableregime[utf]
+
+%\showgrid
+%\showframe
+%\showstruts
+%\showmakeup
+%\showsetups
+%\showlayout
+
+\definemeasure[paperheight] [9.9cm]
+\definemeasure[paperwidth]  [17.6cm]
+\definemeasure[grid]   [0.1cm]
+\definemeasure[small]  [0.2cm]
+\definemeasure[medium] [0.4cm]
+\definemeasure[large]  [0.6cm]
+\definemeasure[big]    [0.8cm]
+\definemeasure[huge]   [1.0cm]
+\definemeasure[zero]   [0.0cm]
+\setuplayout[
+  topspace=0.2cm,
+  backspace=0.4cm,
+  width=fit,
+  header=1cm,
+  footer=0.6cm,
+  cutspace=0cm,
+  margindistance=0cm,
+  margin=0cm,
+  edgedistance=0cm,
+  edge=0.4cm,
+  headerdistance=0.4cm,
+  footerdistance=0.4cm,
+  bottom=0cm,
+  top=0.2cm,
+  topdistance=0cm,
+  bottomdistance=0cm,
+  bottomspace=0cm,
+  height=fit,
+  ]
+%\enabletrackers[visualizers.justification] % overfull/underfull
+%\enabletrackers[typesetters.suspects] % suspicious spacing
+
+% PDF Output Adjustments
+\setupinteraction[state=start, page=yes, menu=on, focus=fit, style=, click=yes, color=, contrastcolor=]
+\setupinteractionscreen[option=max]
+\placebookmarks[section,subsection,subject][section][force=yes]
+
+\def\b{\ctxlua{context(0.2*2)}}
+\definecolor[a][r=\ctxlua{context(45/255)},g=\ctxlua{context(137/255)},b=\ctxlua{context(204/255)}]
+\definecolor[b][r=0.95,g=0.95,b=0.98]
+\definecolor[g][r=0.8,g=0.8,b=0.8]
+\setupbackgrounds[page][background=color, backgroundcolor=b]
+\setupbackgrounds[footer][background=color, backgroundcolor=g]
+\setupbackgrounds[bottom][background=color, backgroundcolor=g]
+
+\setupinteractionmenu[state=start, maxheight=\measure{medium}]
+\defineoverlay[go-on][\overlaybutton{nextpage}]
+\setupbackgrounds[page][background=go-on]
+\defineunit[sunit][separator=small]
+\setupunit[space=medium]
+
+% Typography
+%\setupwhitespace[small]
+\setupindenting[no]
+\setupbodyfont[sans, 11pt]
+\definefontfeature[default][mode=node, kern=yes, bliga=yes, tlig=yes, ccmp=yes, language=dflt, protrusion=quality, expansion=quality]
+\setuptolerance[verytolerant,stretch]
+
+% Header/Footer
+\setupfooter[style=\tf, location=lohi]
+\setupheader[style=\tf, location=lohi]
+\startsetups[prshead]
+	\startframed[frame=off, align=flushleft, location=high]
+    {\bfa\getmarking[sectionnumber] \getmarking[section]}\\
+    {\bf\getmarking[subsectionnumber] \getmarking[subsection]}
+  \stopframed
+\stopsetups
+\startsetups[prsheadfront]
+	\startframed[frame=off, align=flushleft, location=lohi]
+    {\bfa\getmarking[section]}\\
+    {\bf\getmarking[subsection]}
+  \stopframed
+\stopsetups
+
+% Section blocks layouting
+\definestructureconversionset[frontpart:pagenumber][][Romannumerals]
+\definestructureconversionset[bodypart:pagenumber][][numbers]
+\definestructureconversionset[appendix:pagenumber][][Romannumerals]
+\definestructureconversionset[backpart:pagenumber][][Romannumerals]
+\setupsectionblock[frontpart][number=no]
+\setupsectionblock[appendix][number=no]
+\setupsectionblock[backpart][number=no]
+\startsectionblockenvironment[frontpart]
+\setnumber[userpage][0]
+  \setuphead[section][page=no]
+	\setupheadertexts[]
+  \setupheadertexts[\directsetup{prsheadfront}][]
+	\setupfootertexts[]
+  \setupfootertexts[][\userpagenumber]
+\stopsectionblockenvironment
+\startsectionblockenvironment[bodypart]
+	\setupheadertexts[]
+  \setupheadertexts[\directsetup{prshead}][]
+  \setupfootertexts[]
+  \setupfootertexts[{\interactionbar[alternative=a,width=.4\makeupwidth,step=small,symbol=yes]}][\userpagenumber\subpagenumber]
+  \savenumber[userpage]
+  \resetnumber[userpage]
+\stopsectionblockenvironment
+\startsectionblockenvironment[appendix]
+  \setupheadertexts[]
+  \setupheadertexts[\directsetup{prsheadfront}][]
+	\setupfootertexts[]
+  \setupfootertexts[][\userpagenumber]
+  \restorenumber[userpage]
+  \incrementnumber[userpage] % This is to compenesate a bug
+  \decrementnumber[userpage]
+\stopsectionblockenvironment
+\startsectionblockenvironment[backpart]
+  \setupheadertexts[]
+  \setupheadertexts[\directsetup{prsheadfront}][]
+	\setupfootertexts[]
+  \setupfootertexts[][\userpagenumber]
+\stopsectionblockenvironment
+
+% TOC style
+\setuplist[part][width=0mm, distance=2mm, style=bold, aligntitle=no]
+\setuplist[chapter][label=yes, width=fit, distance=2mm, style=bold]
+\setuplist[section,subject][width=0mm, distance=2mm, margin=0mm, style=bold, alternative=b]
+\setuplist[subsection,subsubject][width=0mm, distance=2mm, margin=5mm, alternative=c]
+\setuplist[subsubsection,subsubsubject][width=0mm, distance=2mm, margin=10mm, alternative=c]
+
+% Heading setup
+\setuphead[chapter,title][style={\bfd}]
+\setuphead[section,subsection][style={\bfc}, before={}, after={}, page=yes, placehead=empty]
+\setuphead[subject][style={\bfc}, before={}, after={}, page=no]
+\setuphead[subsection,subsubject][style={\bfb}, before={}, after={}]
+\setuphead[subsubsection,subsubsubject][style={\bfa}, before={\bigskip}, after={}]
+
+% Floeat captions
+\setupcaptions[table][location=top]
+\setupcaptions[figure][location=bottom]
+\setupcaptions[headstyle=\bf]
+\stopenvironment

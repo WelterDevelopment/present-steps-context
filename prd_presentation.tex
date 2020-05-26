@@ -1,0 +1,149 @@
+\startproduct[prd_presentation]
+\environment[env_presentation]
+% If you want to use your own layout, make sure you set the following lines since the stepping relies on *not* having the section head in the page content. Instead, the Section/Subsection gets printed in the page header
+  %\setuphead[section,subsection][style={\bfc}, before={}, after={}, page=yes, placehead=empty]
+  %\setupheadertexts[{\getmarking[sectionnumber] \getmarking[section] -- \getmarking[subsectionnumber] \getmarking[subsection]}][]
+
+\usemodule[present-steps] % modified
+
+\useURL[thomas][mailto:wdev@outlook.de][][wdev@outlook.de]
+
+\setvariables[meta][title={Presentations in \ConTeXt}, subtitle={Stepping with adjustments to the original s-present-steps.mkiv}, author={Thomas Welter}, date={2020.05.26}]
+
+\setupinteraction[title=\getvariable{meta}{title}, subtitle=\getvariable{meta}{subtitle}, author=\getvariable{meta}{author}, date=\getvariable{meta}{date}]
+
+\setupsubpagenumber[way=bysubsection, state=start, numberconversion=characters]
+
+\starttext
+
+\startfrontmatter
+\definemakeup[title][doublesided=no, page=right, headerstate=empty, footerstate=empty,  pagestate=start, style=bigbodyfont, align=middle]
+\starttitlemakeup
+  {\bfd \getvariable{meta}{title}}
+  \blank[3*medium]
+  {\tfb \getvariable{meta}{subtitle}}
+  \blank[3*medium]
+  {\tfa \getvariable{meta}{author}}
+  \blank[2*medium]
+  {\tfa \getvariable{meta}{date}}
+  \blank[3*medium]
+  {\tfa \from[thomas]}
+\stoptitlemakeup
+
+\setupbackgrounds[header][text][frame=off, bottomframe=on]
+
+\setmarking[section]{Content} % \setmarking[section]{} will set the header text without calling \section{}
+\bookmark[section]{Content}
+\placecontent
+\stopfrontmatter
+
+\startbodymatter
+\startsection[title=Stepping is cool]
+\startsubsection[title=Basic stepping]
+\startsteps
+	\startstep
+    STEP ONE. 
+    
+    Step.Substep :  \currentstep.\currentsubstep 
+
+    Page.SubPage :  \userpagenumber.\subpagenumber
+
+    \blank
+	\stopstep
+
+	\startstep[n=7]
+		STEP Two. Note that the automatic increment of \type{\pagenumber} is stopped during stepping (see \type{\setuppagenumber[state=stop]} in the module). Instead of incrementing \type{\pagenumber}, a \type{\subpagenumber} (here shown in characters) is used, which gets resetted by subsection.
+
+		Step.Substep :  \currentstep.\currentsubstep 
+		\startitemize[horizontal,two,packed,broad]
+      \startsubstep \startitem 1 \stopitem \stopsubstep
+      \startsubstep \startitem 2 \stopitem \stopsubstep
+      \startsubstep \startitem 3 \stopitem \stopsubstep
+      \startsubstep \startitem 4 \stopitem \stopsubstep
+      \startsubstep \startitem 5 \stopitem \stopsubstep
+      \startsubstep \startitem 6 \stopitem \stopsubstep
+      \startsubstep \startitem 7 \stopitem \stopsubstep
+		\stopitemize		
+	\stopstep
+
+	\startstep
+		STEP THREE
+	\stopstep
+
+	\startstep
+		STEP FOUR
+	\stopstep
+\stopsteps
+\stopsubsection
+
+\startsubsection[title=Columns]
+\startsteps
+  \startstep
+    Some text that is not in columns
+  \stopstep
+  \startstep[n=2]
+    \startcolumns[n=2]
+      \startsubstep 
+        first col 
+      \stopsubstep
+      \startsubstep 
+        \column second col 
+      \stopsubstep
+    \stopcolumns
+  \stopstep
+\stopsteps
+\stopsubsection
+
+\startsubsection[title=Tables]
+\setupTABLE[r][each][style=\tfx\it, align=center]
+\startsteps
+	\startstep
+		Tables are also working
+	\stopstep
+  \startstep[n=3]
+		\startplacetable[location=here, reference=tab:exampletable, title={Example table}]
+    \startsubstep
+      \bTABLE[split=repeat,option=stretch]
+      \bTABLEhead
+      \bTR
+        \bTH  head1 \eTH
+        \bTH  head2 \eTH
+      \eTR
+      \eTABLEhead
+    \stopsubstep
+    \bTABLEbody
+      \startsubstep
+        \bTR \bTD One \eTD \bTD two \eTD \eTR
+      \stopsubstep
+      \startsubstep
+        \bTR \bTD One \eTD \bTD two \eTD \eTR
+      \stopsubstep
+    \eTABLEbody
+    \eTABLE
+		\stopplacetable
+    \setupcaptions[table][state=stop] % Quick hack do disable the table counter
+  \stopstep
+  \startstep 
+    bla
+  \stopstep
+  \startstep 
+    bla
+  \stopstep
+\stopsteps
+\stopsubsection
+\stopsection
+\stopbodymatter
+
+\startappendices
+\section{Some appendices}
+...
+\stopappendices
+
+\startbackmatter
+\section{Some backup slides}
+...
+\stopbackmatter
+
+\stoptext
+
+\stopproduct
