@@ -29,83 +29,83 @@ local set        = 0
 local settings   = nil
 
 function steps.startsteps(buffername)
-    set  = set + 1
-    data = { }
-    name = buffername
+	set  = set + 1
+	data = { }
+	name = buffername
 end
 
 function steps.stopsteps()
-    local n = 0
-    for i=1,#data do
-        local state = "once"
-        local done  = 0
-        while true do
-            context.startprocessingsteps()
-            for j=1,i do
-                local step    = data[j]
-                local nested  = step.nested
-                local content = step.content
-                local last    = (i == #data) and (j == i) and 1 or 0
-                --[[
-								local option = step.option
-								local flush  = true
-                if option == interfaces.variables["title"] then
-                    if i > 1 then
-                        flush = false
-                    end
-                elseif option == interfaces.variables["repeat"] then
-                    if i == 1 then
-                        flush = false
-                    end
-                end 
-								--]]
-                --if flush then
-                    if j < i or nested == 0 then
-                        context(function()
-														buffers.assign("step",content)
-                            if j == 1 and i > 1 then -- Automization of page flushing, no need for the title/repeat workaround
-																context.page()
-														end
-														context.processstep("step",i,0,last)
-                        end)
-                        state = "done"
-                    else
-                        done = done + 1
-                        local d = done
-                        context(function()
-                            buffers.assign("step",content)
-                            context.processstep("step",i,d,last)
-                        end)
-                        if done == nested then
-                            state = "done"
-                            n = n + nested
-                        else
-                            state = "busy"
-                        end
-                    end
-                --end
-            end
-            context.stopprocessingsteps()
-            if state == "done" then
-                break
-            end
-        end
-    end
+	local n = 0
+	for i=1,#data do
+	local state = "once"
+	local done  = 0
+	while true do
+		context.startprocessingsteps()
+		for j=1,i do
+			local step    = data[j]
+			local nested  = step.nested
+			local content = step.content
+			local last    = (i == #data) and (j == i) and 1 or 0
+			--[[
+			local option = step.option
+			local flush  = true
+			if option == interfaces.variables["title"] then
+				if i > 1 then
+				flush = false
+				end
+			elseif option == interfaces.variables["repeat"] then
+				if i == 1 then
+				flush = false
+				end
+			end 
+			--]]
+			--if flush then
+			if j < i or nested == 0 then
+				context(function()
+					buffers.assign("step",content)
+					if j == 1 and i > 1 then -- Automization of page flushing, no need for the title/repeat workaround
+					context.page()
+					end
+					context.processstep("step",i,0,last)
+				end)
+				state = "done"
+				else
+					done = done + 1
+					local d = done
+					context(function()
+						buffers.assign("step",content)
+						context.processstep("step",i,d,last)
+					end)
+				if done == nested then
+					state = "done"
+					n = n + nested
+				else
+					state = "busy"
+				end
+				end
+				--end
+			end
+			context.stopprocessingsteps()
+			if state == "done" then
+				break
+			end
+		end
+	end
 end
 
 function steps.startstep(str)
-    settings = utilities.parsers.settings_to_hash(str)
+	settings = utilities.parsers.settings_to_hash(str)
 end
 
 function steps.stopstep()
-    settings.content = buffers.getcontent(name)
-    settings.nested  = tonumber(settings.n) or 0
-    data[#data+1] = settings
+	settings.content = buffers.getcontent(name)
+	settings.nested  = tonumber(settings.n) or 0
+	data[#data+1] = settings
 end
 
 function steps.startsubstep(str)
-    local d = data[#data]
-    d.nested = d.nested + 1
+	local d = data[#data]
+	d.nested = d.nested + 1
 end
 
 function steps.stopsubstep()
@@ -126,62 +126,62 @@ end
   {}
 
 \unexpanded\def\processstep#1#2#3#4%
-  {\par
-   \edef\currentstep   {#2}
-   \edef\currentsubstep{#3}
-	 \ifnum\currentstep=1
+	{\par
+	\edef\currentstep   {#2}
+	\edef\currentsubstep{#3}
+	\ifnum\currentstep=1
 		\setuppagenumber[state=stop] % Disable page counting after first flush
 		\resetsubpagenumber % New subpage counting for the current slide
-	 \fi
-   \ifcase#4\relax
- 		\setupreferencing[prefix=#2:#3]
-    \getbuffer[#1]
+	\fi
+	\ifcase#4\relax
+		\setupreferencing[prefix=#2:#3]
+		\getbuffer[#1]
 		\par
-   \else
+	\else
 		\setupreferencing[prefix=]
 		\getbuffer[#1]
-    \setuppagenumber[state=start] % Reenable page counting
+		\setuppagenumber[state=start] % Reenable page counting
 		\setupcaptions[table][state=start] % Reenable float counting
 		\setupcaptions[figure][state=start]
 		\page
-   \fi}
+	\fi}
 
 \let\normalstartstep\startstep
 
 \newcount\wantedsubstep
 
 \unexpanded\def\startsteps
-  {
-   \ctxlua{moduledata.steps.startsteps("\thedefinedbuffer{step}")}
-   }
+	{
+		\ctxlua{moduledata.steps.startsteps("\thedefinedbuffer{step}")}
+	}
 
 \unexpanded\def\stopsteps
-  {
+	{
 		\ctxlua{moduledata.steps.stopsteps()}
 	}
 
 \unexpanded\def\startstep
-  {\dosingleempty\startstepindeed}
+	{\dosingleempty\startstepindeed}
 
 \def\startstepindeed[#1]%
-  {\ctxlua{moduledata.steps.startstep("#1")}%
-   \normalstartstep}
+	{\ctxlua{moduledata.steps.startstep("#1")}%
+	 \normalstartstep}
 
 \unexpanded\def\stopstep
-  {\ctxlua{moduledata.steps.stopstep()}}
+	{\ctxlua{moduledata.steps.stopstep()}}
 
 \let\stopsubstep\relax
 
 \unexpanded\def\startsubstep#1\stopsubstep
-  {\ctxlua{moduledata.steps.startsubstep()}%
-   \ifcase\currentsubstep\relax
-     #1%
-   \else
-     \global\advance\wantedsubstep\plusone
-     \ifnum\currentsubstep<\wantedsubstep\else % This is wrong in the original file (> instead of <)
-       #1%
-     \fi
-   \fi
-   \ctxlua{moduledata.steps.stopsubstep()}}
+	{\ctxlua{moduledata.steps.startsubstep()}%
+		\ifcase\currentsubstep\relax
+			#1%
+		\else
+			\global\advance\wantedsubstep\plusone
+			\ifnum\currentsubstep<\wantedsubstep\else % This is wrong in the original file (> instead of <)
+				#1%
+			\fi
+		\fi
+	\ctxlua{moduledata.steps.stopsubstep()}}
 
 \protect \endinput
