@@ -1,7 +1,5 @@
 \startenvironment[env_presentation]
 
-\usepath[components,pictures,products]
-
 % Document Layout
 \setupcolors[state=start]
 \definepapersize[W1][width=176mm, height=99mm]
@@ -18,15 +16,6 @@
 %\showsetups
 %\showlayout
 
-\definemeasure[paperheight] [9.9cm]
-\definemeasure[paperwidth]  [17.6cm]
-\definemeasure[grid]   [0.1cm]
-\definemeasure[small]  [0.2cm]
-\definemeasure[medium] [0.4cm]
-\definemeasure[large]  [0.6cm]
-\definemeasure[big]    [0.8cm]
-\definemeasure[huge]   [1.0cm]
-\definemeasure[zero]   [0.0cm]
 \setuplayout[
   topspace=0.2cm,
   backspace=0.4cm,
@@ -47,9 +36,7 @@
   bottomspace=0cm,
   height=fit,
   ]
-%\enabletrackers[visualizers.justification] % overfull/underfull
-%\enabletrackers[typesetters.suspects] % suspicious spacing
-
+  
 % PDF Output Adjustments
 \setupinteraction[state=start, page=yes, menu=on, focus=fit, style=, click=yes, color=, contrastcolor=]
 \setupinteractionscreen[option=max]
@@ -66,11 +53,8 @@
 \setupinteractionmenu[state=start, maxheight=\measure{medium}]
 \defineoverlay[go-on][\overlaybutton{nextpage}]
 \setupbackgrounds[page][background=go-on]
-\defineunit[sunit][separator=small]
-\setupunit[space=medium]
 
 % Typography
-%\setupwhitespace[small]
 \setupindenting[no]
 \setupbodyfont[sans, 11pt]
 \definefontfeature[default][mode=node, kern=yes, bliga=yes, tlig=yes, ccmp=yes, language=dflt, protrusion=quality, expansion=quality]
@@ -92,7 +76,7 @@
   \stopframed
 \stopsetups
 
-% Section blocks layouting
+% (Scientific) Section blocks layouting
 \definestructureconversionset[frontpart:pagenumber][][Romannumerals]
 \definestructureconversionset[bodypart:pagenumber][][numbers]
 \definestructureconversionset[appendix:pagenumber][][Romannumerals]
@@ -146,7 +130,7 @@
 \setuphead[subsection,subsubject][style={\bfb}, before={}, after={}]
 \setuphead[subsubsection,subsubsubject][style={\bfa}, before={\bigskip}, after={}]
 
-% Floeat captions
+% Float captions
 \setupcaptions[table][location=top]
 \setupcaptions[figure][location=bottom]
 \setupcaptions[headstyle=\bf]

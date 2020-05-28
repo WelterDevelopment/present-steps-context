@@ -4,6 +4,7 @@
   %\setuphead[section,subsection][style={\bfc}, before={}, after={}, page=yes, placehead=empty]
   %\setupheadertexts[{\getmarking[sectionnumber] \getmarking[section] -- \getmarking[subsectionnumber] \getmarking[subsection]}][]
 
+
 \usemodule[present-steps] % modified
 
 \useURL[thomas][mailto:wdev@outlook.de][][wdev@outlook.de]
@@ -82,14 +83,14 @@
     Some text that is not in columns
   \stopstep
   \startstep[n=2]
-    \startcolumns[n=2]
+    \startcolumnset[n=2]
       \startsubstep 
-        first col 
+        first col
       \stopsubstep
       \startsubstep 
         \column second col 
       \stopsubstep
-    \stopcolumns
+    \stopcolumnset
   \stopstep
 \stopsteps
 \stopsubsection
@@ -124,10 +125,7 @@
     \setupcaptions[table][state=stop] % Quick hack do disable the table counter
   \stopstep
   \startstep 
-    bla
-  \stopstep
-  \startstep 
-    bla
+    Some more text
   \stopstep
 \stopsteps
 \stopsubsection
